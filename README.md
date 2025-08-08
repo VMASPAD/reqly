@@ -206,7 +206,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 - **GitHub Issues**: [Report bugs or request features](https://github.com/VMASPAD/reqly/issues)
 - **Documentation**: [Full documentation](https://reqly.app/docs)
-- **Discord**: [Join our community](https://discord.gg/reqly)
 
 ---
 
