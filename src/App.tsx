@@ -14,6 +14,7 @@ import Testing from "./components/Testing";
 import { useAppState } from "./lib/hooks";
 import { useToast } from "./lib/toast";
 import { runTestsForRequest } from "./lib/test-engine";
+import { TestResult } from "./lib/types";
 
 function App() {
   const [mobileView, setMobileView] = useState<'collections' | 'params' | 'response' | 'history' | 'tests'>('params');
@@ -131,11 +132,11 @@ function App() {
       // Get the current active environment
       const activeEnvironment = state.environments.find(env => env.id === state.activeEnvironmentId);
       
-      // Run tests for the request
+      // Run tests for the request (even if response is undefined or has error status)
       const testResults = await runTestsForRequest(
         requestId,
         activeTab.request,
-        activeTab.response,
+        activeTab.response, // This might be undefined, but the test engine should handle it
         state.testScripts,
         activeEnvironment
       );
@@ -148,6 +149,19 @@ function App() {
       console.log('Test results:', testResults);
     } catch (error) {
       console.error('Failed to run tests:', error);
+      
+      // Even if test execution fails, try to add an error result
+      const errorResult: TestResult = {
+        id: `error_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+        testName: 'Test Execution Error',
+        passed: false,
+        message: error instanceof Error ? error.message : 'Failed to execute tests',
+        duration: 0,
+        timestamp: new Date(),
+        requestId: requestId
+      };
+      
+      addTestResult(errorResult);
     }
   };
 

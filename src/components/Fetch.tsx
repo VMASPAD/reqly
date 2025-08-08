@@ -4,7 +4,7 @@ import { Input } from './ui/input';
 import { Button } from './ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { Send, Plus, X, Settings, Save, Edit3 } from 'lucide-react';
-import { RequestConfig, HttpMethod, TabState, Collection, Folder, Environment } from '@/lib/types';
+import { RequestConfig, HttpMethod, TabState, Collection, Folder, Environment, ResponseData } from '@/lib/types';
 import { useHttpRequest } from '@/lib/http';
 import { useKeyboardShortcuts } from '@/lib/keyboard';
 import Ai from './Ai';
@@ -81,21 +81,32 @@ function Fetch({
         name: activeTab.request.url.split('/').pop() || 'Request'
       });
 
-      // Add to history
+      // Add to history (always add, regardless of status code)
       onAddToHistory({
         request: activeTab.request,
         response,
         timestamp: new Date()
       });
     } catch (error) {
+      // Create an error response to display
+      const errorResponse: ResponseData = {
+        status: 0,
+        statusText: 'Network Error',
+        headers: {},
+        body: error instanceof Error ? error.message : 'Request failed',
+        time: 0,
+        size: 0
+      };
+      
       onTabUpdate(activeTab.id, { 
+        response: errorResponse,
         loading: false 
       });
       
-      // Add error to history
+      // Add error to history with error response
       onAddToHistory({
         request: activeTab.request,
-        error: error instanceof Error ? error.message : 'Request failed',
+        response: errorResponse,
         timestamp: new Date()
       });
     }

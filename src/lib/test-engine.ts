@@ -67,7 +67,7 @@ export class TestEngine {
     this.currentRequestId = requestId;
   }
 
-  setResponse(response: ResponseData) {
+  setResponse(response: ResponseData | undefined) {
     this.currentResponse = response;
   }
 
@@ -110,12 +110,18 @@ export class TestEngine {
         to: {
           have: {
             status: (code: number) => {
-              if (currentResponse?.status !== code) {
-                throw new Error(`Expected status ${code}, got ${currentResponse?.status}`);
+              if (!currentResponse) {
+                throw new Error(`No response available to check status`);
+              }
+              if (currentResponse.status !== code) {
+                throw new Error(`Expected status ${code}, got ${currentResponse.status}`);
               }
             },
             header: (key: string, value?: string) => {
-              const headerValue = currentResponse?.headers[key.toLowerCase()];
+              if (!currentResponse) {
+                throw new Error(`No response available to check headers`);
+              }
+              const headerValue = currentResponse.headers[key.toLowerCase()];
               if (!headerValue) {
                 throw new Error(`Header '${key}' not found`);
               }
@@ -126,8 +132,11 @@ export class TestEngine {
           }
         },
         json: () => {
+          if (!currentResponse) {
+            throw new Error(`No response available to parse as JSON`);
+          }
           try {
-            return JSON.parse(currentResponse?.body || '{}');
+            return JSON.parse(currentResponse.body || '{}');
           } catch {
             throw new Error('Response body is not valid JSON');
           }
@@ -300,13 +309,17 @@ export async function runTestsForRequest(
   engine.setRequest(request);
   engine.setRequestId(requestId);
   
-  if (response) {
-    engine.setResponse(response);
-  }
+  // Always set the response, even if it's undefined
+  engine.setResponse(response);
   
   const relevantScripts = testScripts.filter(
     script => script.type === 'test' && script.requestId === requestId
   );
+  
+  // If no response and no test scripts, return empty results
+  if (!response && relevantScripts.length === 0) {
+    return [];
+  }
   
   const allResults: TestResult[] = [];
   
