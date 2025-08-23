@@ -8,7 +8,7 @@ interface UpdateInfo {
   downloadUrl?: string;
 }
 
-const CURRENT_VERSION = '1.0.0';
+const CURRENT_VERSION = import.meta.env.VITE_VERSION || '1.0.0';
 const UPDATE_CHECK_INTERVAL = 24 * 60 * 60 * 1000; // 24 horas
 const GITHUB_API_URL = 'https://api.github.com/repos/VMASPAD/reqly/releases/latest';
 

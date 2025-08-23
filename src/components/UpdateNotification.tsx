@@ -12,18 +12,18 @@ export function UpdateNotification() {
   }
 
   return (
-    <Card className="fixed top-4 right-4 w-96 z-50 shadow-lg border-blue-200 bg-blue-50">
+    <Card className="fixed top-4 right-4 w-96 z-50 shadow-lg border-primary/20 bg-accent">
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg flex items-center">
-            <Download size={20} className="mr-2 text-blue-600" />
+            <Download size={20} className="mr-2 text-primary" />
             {isChecking ? 'Checking for updates...' : 'Update Available'}
           </CardTitle>
           <Button
             variant="ghost"
             size="sm"
             onClick={dismissUpdate}
-            className="hover:bg-blue-100"
+            className="hover:bg-muted"
           >
             <X size={16} />
           </Button>
@@ -40,7 +40,7 @@ export function UpdateNotification() {
           </div>
           
           {updateInfo.releaseNotes && (
-            <div className="bg-white p-3 rounded border">
+            <div className="bg-background p-3 rounded border">
               <p className="text-sm font-medium mb-1">What's new:</p>
               <p className="text-xs text-muted-foreground line-clamp-3">
                 {updateInfo.releaseNotes}
@@ -65,7 +65,7 @@ export function UpdateNotification() {
               variant="outline"
               size="sm"
               onClick={dismissUpdate}
-              className="hover:bg-blue-100"
+              className="hover:bg-muted"
             >
               Later
             </Button>
