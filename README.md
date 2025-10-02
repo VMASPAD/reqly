@@ -181,6 +181,7 @@ We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) f
 6. Push to branch: `git push origin feature/amazing-feature`
 7. Open a Pull Request
 
+<img src="https://view-stats-backend.hermesbackend.xyz/image?repository=https://github.com/VMASPAD/reqly&color=7DDA58"/>
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
